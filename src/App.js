@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Header from './components/Header';
+import TeslaBattery from './containers/TeslaBattery';
 
 class App extends Component {
   state = {  }
@@ -8,6 +9,7 @@ class App extends Component {
     return ( 
       <div className="App">
         <Header />
+        <TeslaBattery />
       </div>
      );
   }
