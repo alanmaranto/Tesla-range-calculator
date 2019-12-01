@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { getModelData } from '../services/BatteryService';
+import { carModels } from '../constants/carModels';
 import "./TeslaBattery.css";
 import TeslaNotice from "../components/TeslaNotice/TeslaNotice";
 import TeslaCar from "../components/TeslaCar/TeslaCar";
@@ -21,6 +23,31 @@ class TeslaBattery extends Component {
     super(props);
     this.state = initialState;
   }
+
+  componentDidMount() {
+      this.statsUpdate();
+  }
+
+  calculateStats = (models, value) => {
+      const dataModels = getModelData();
+      return models.map(model => {
+          const { speed, temperature, climate, wheels } = value;
+          const miles = dataModels[model][wheels][climate ? 'on' : 'off'].speed[speed][temperature];
+          return {
+              model,
+              miles
+          };
+      });
+  }
+
+  statsUpdate = () => {
+      const { config } = this.state;
+    this.setState({
+        carstats: this.calculateStats(carModels, config)
+    })
+  }
+
+
   render() {
     const { config, carstats } = this.state;
     return (
