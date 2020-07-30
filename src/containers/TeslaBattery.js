@@ -7,17 +7,16 @@ import TeslaCar from "../components/TeslaCar/TeslaCar";
 import TeslaStats from "../components/TeslaStats/TeslaStats";
 import TeslaCounter from "../components/TeslaCounter/TeslaCounter";
 import TeslaClimate from "../components/TeslaClimate/TeslaClimate";
-
-const config = {
-  speed: 55,
-  temperature: 20,
-  climate: true,
-  wheels: 19
-};
+import TeslaWheels from "../components/TeslaWheels/TeslaWheels";
 
 const initialState = {
-  config,
-  carstats: []
+  config: {
+    speed: 55,
+    temperature: 20,
+    climate: true,
+    wheels: 19,
+  },
+  carstats: [],
 };
 
 class TeslaBattery extends Component {
@@ -81,7 +80,7 @@ class TeslaBattery extends Component {
 
   calculateStats = (models, value) => {
     const dataModels = getModelData();
-    return models.map(model => {
+    return models.map((model) => {
       const { speed, temperature, climate, wheels } = value;
       const miles =
         dataModels[model][wheels][climate ? "on" : "off"].speed[speed][
@@ -89,21 +88,27 @@ class TeslaBattery extends Component {
         ];
       return {
         model,
-        miles
+        miles,
       };
     });
   };
 
   statsUpdate = () => {
-    const { config } = this.state;
+    const { config } = { ...this.state };
     this.setState({
-      carstats: this.calculateStats(carModels, config)
+      carstats: this.calculateStats(carModels, config),
     });
   };
 
   changeClimate = () => {
     const { config } = this.state;
     config["climate"] = !config.climate;
+    this.setState({ config });
+  };
+
+  handleChangeWheels = (size) => {
+    const config  = { ...this.state.config };
+    config["wheels"] = size;
     this.setState({ config });
   };
 
@@ -124,10 +129,10 @@ class TeslaBattery extends Component {
           />
           <div className="tesla-climate-container cf">
             <TeslaCounter
-                currentValue={config.temperature}
-                initValues={counterDefaultVal.temperature}
-                increment={this.increment}
-                decrement={this.decrement}
+              currentValue={config.temperature}
+              initValues={counterDefaultVal.temperature}
+              increment={this.increment}
+              decrement={this.decrement}
             />
             <TeslaClimate
               value={config.climate}
@@ -135,8 +140,11 @@ class TeslaBattery extends Component {
               changeClimate={this.changeClimate}
             />
           </div>
+          <TeslaWheels
+            value={this.state.config.wheels}
+            handleChangeWheels={this.handleChangeWheels}
+          />
         </div>
-
         <TeslaNotice />
       </form>
     );
