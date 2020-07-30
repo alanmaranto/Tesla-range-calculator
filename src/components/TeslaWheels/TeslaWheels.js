@@ -1,14 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
-// import "./TeslaWheels.css";
+import PropTypes from "prop-types"
+import "./TeslaWheels.css";
 
-const LabelLists = ({ value, handleChangeWheels }) => {
+const LabelLists = (props) => {
+  const value = props.wheels.value;
+  const changeHandler = props.wheels.handleChangeWheels;
   const sizes = [19, 21];
-
   const LabelItems = sizes.map((size) => (
     <label
       key={size}
-      htmlFor=""
       className={`tesla-wheels__item tesla-wheels__item--${size} ${
         value === size ? "tesla-wheels__item--active" : ""
       }`}
@@ -18,27 +18,25 @@ const LabelLists = ({ value, handleChangeWheels }) => {
         name="wheelsize"
         value={size}
         checked={value === size}
-        onChange={() => handleChangeWheels(size)}
+        onChange={() => {
+          changeHandler(size);
+        }}
       />
       <p>{size}"</p>
     </label>
   ));
-
   return <div>{LabelItems}</div>;
 };
-
-const TeslaWheels = ({ value, handleChangeWheels }) => (
+const TeslaWheels = (props) => (
   <div className="tesla-wheels__component">
     <p className="tesla-wheels__title">Wheels</p>
     <div className="tesla-wheels__container cf">
-      <LabelLists value={value} handleChangeWheels={handleChangeWheels} />
+      <LabelLists wheels={props} />
     </div>
   </div>
 );
-
 TeslaWheels.propTypes = {
   value: PropTypes.number,
-  changeHandlerWheels: PropTypes.func,
+  handleChangeWheels: PropTypes.func,
 };
-
-export default LabelLists;
+export default TeslaWheels;
